@@ -1,0 +1,14 @@
+2021-03-17 00:10:29.285  INFO 56277 --- [main] com.ecommerce.demo.DemoApplication       : Starting DemoApplication using Java 13.0.6 on liujiandeMacBook-Pro.local with PID 56277 (/Users/liujian/Desktop/java代码/GraduationDesign/target/classes started by liujian in /Users/liujian/Desktop/java代码/GraduationDesign)
+2021-03-17 00:10:29.290  INFO 56277 --- [main] com.ecommerce.demo.DemoApplication       : No active profile set, falling back to default profiles: default
+2021-03-17 00:10:29.618  INFO 56277 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode!
+2021-03-17 00:10:29.619  INFO 56277 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2021-03-17 00:10:29.646  INFO 56277 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 17 ms. Found 0 Redis repository interfaces.
+2021-03-17 00:10:30.120  INFO 56277 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2021-03-17 00:10:30.126  INFO 56277 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2021-03-17 00:10:30.126  INFO 56277 --- [main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.43]
+2021-03-17 00:10:30.240  INFO 56277 --- [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2021-03-17 00:10:30.241  INFO 56277 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 920 ms
+2021-03-17 00:10:30.648  INFO 56277 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2021-03-17 00:10:30.900  INFO 56277 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2021-03-17 00:10:30.908  INFO 56277 --- [main] com.ecommerce.demo.DemoApplication       : Started DemoApplication in 1.773 seconds (JVM running for 2.497)
+2021-03-17 00:10:34.548  INFO 56277 --- [SpringContextShutdownHook] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'

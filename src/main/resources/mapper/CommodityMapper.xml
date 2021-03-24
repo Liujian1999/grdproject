@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ecommerce.demo.mapper.CommodityMapper">
+
+    <insert id="commodityShelve" parameterType="com.ecommerce.demo.entity.model.CommodityInfo">
+    insert into commodity_info(commodity_describe,commodity_img,commodity_price,commodity_real_price,commission_rate,shelve_time,commodity_name,state)
+    values (#{commodityDescribe},#{commodityImg},#{commodityPrice},#{commodityRealPrice},#{commissionRate},#{shelveTime},#{commodityName},#{state})
+</insert>
+
+    <delete id="commodityRemove" parameterType="int">
+        delete
+        from commodity_info
+        where id=#{id}
+    </delete>
+
+    <select id="findAllCommoditiesByState" parameterType="integer" resultType="com.ecommerce.demo.entity.model.CommodityInfo">
+    select * from commodity_info where state = #{state}
+    </select>
+</mapper>

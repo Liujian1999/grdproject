@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ecommerce.demo.mapper.UserMapper">
+
+    <insert id="userRegist" parameterType="com.ecommerce.demo.entity.model.UserInfo">
+        insert into user_info(user_name,user_phone,user_password) values (#{userName},#{userPhone},#{passWord})
+    </insert>
+
+    <select id="findUserByUserName" parameterType="string" resultType="java.lang.Integer">
+        select count(*) from user_info where user_name = #{userName}
+    </select>
+
+    <select id="findUserByUserNameAndPwd" parameterType="com.ecommerce.demo.entity.model.UserInfo" resultType="java.lang.Integer">
+        select count(*) from user_info where user_name = #{userName} and password=#{passWord}
+    </select>
+
+    <select id="findUserByUserPhone" parameterType="com.ecommerce.demo.entity.model.UserInfo" resultType="java.lang.Integer">
+        select count(*) from user_info where user_phone=#{userPhone}
+    </select>
+</mapper>
