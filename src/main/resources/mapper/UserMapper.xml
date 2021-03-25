@@ -20,4 +20,11 @@
     <select id="findUserByUserPhone" parameterType="com.ecommerce.demo.entity.model.UserInfo" resultType="java.lang.Integer">
         select count(*) from user_info where user_phone=#{userPhone}
     </select>
+
+    <insert id="storeAuthCode" parameterType="com.ecommerce.demo.entity.model.AuthCodeInfo">
+        insert into auth_code(code_number,user_phone,send_time) values (#{codeNumber},#{userPhone},#{sendTime})
+    </insert>
+    <select id="getAuthCode" resultType="INTEGER" >
+        select code_number from auth_code where user_phone = #{userPhone} order by send_time desc limit 1
+    </select>
 </mapper>

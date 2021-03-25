@@ -1,4 +1,4 @@
-package com.ecommerce.demo.service.Impl;
+package com.ecommerce.demo.service.impl;
 
 import com.ecommerce.demo.entity.model.AuthCodeInfo;
 import com.ecommerce.demo.entity.model.UserInfo;
@@ -8,6 +8,10 @@ import com.ecommerce.demo.utils.MD5Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * @author 刘剑
+ * @data 2021/03/24
+ */
 @Service
 public class UserServiceImpl implements UserService {
     @Autowired
@@ -71,6 +75,18 @@ public class UserServiceImpl implements UserService {
         }
         return false;
     }
+    /**
+     * 获取验证码
+     * @param userPhone
+     */
+    @Override
+    public Integer getAuthCode (String userPhone){
+      Integer codeNumber = userMapper.getAuthCode(userPhone);
+      if (codeNumber == null) {
+         return -1;
+      }
+        return codeNumber;
+    }
 
     /**
      * 存储验证码
@@ -78,6 +94,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public void storeAuthCode(AuthCodeInfo authCodeInfo) {
-
+        System.out.println(authCodeInfo.getCodeNumber());
+        userMapper.storeAuthCode(authCodeInfo);
     }
 }

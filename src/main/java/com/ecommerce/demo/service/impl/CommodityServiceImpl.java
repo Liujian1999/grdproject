@@ -1,4 +1,4 @@
-package com.ecommerce.demo.service.Impl;
+package com.ecommerce.demo.service.impl;
 
 import com.ecommerce.demo.entity.MyException;
 import com.ecommerce.demo.entity.model.CommodityInfo;
@@ -14,6 +14,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+/**
+ * @author 刘剑
+ * @data 2021/03/24
+ */
 
 @Service
 public class CommodityServiceImpl implements CommodityService {

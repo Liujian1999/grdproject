@@ -2,7 +2,6 @@ package com.ecommerce.demo.entity.model;
 
 import lombok.Data;
 
-import java.math.BigDecimal;
 
 @Data
 public class AuthCodeInfo {
@@ -24,5 +23,5 @@ public class AuthCodeInfo {
     /**
      * 验证码发送时间
      */
-    private BigDecimal sendTime;
+    private long sendTime;
 }

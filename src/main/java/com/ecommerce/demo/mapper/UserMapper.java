@@ -12,7 +12,7 @@ public interface UserMapper {
      * @param userInfo
      * @return
      */
-    int userRegist(@Param("userInfo") UserInfo userInfo);
+    int userRegist( UserInfo userInfo);
     /**
      * 通过用户名查找用户
      * @param userName
@@ -24,7 +24,7 @@ public interface UserMapper {
      * @param userInfo
      * @return
      */
-    int findUserByUserNameAndPwd(@Param("userInfo") UserInfo userInfo);
+    int findUserByUserNameAndPwd( UserInfo userInfo);
     /**
      * 通过手机号查找用户
      * @param userPhone
@@ -36,11 +36,13 @@ public interface UserMapper {
      * 储存验证码
      * @param authCodeInfo
      */
-    void storeAuthCode(@Param("authCodeInfo")AuthCodeInfo authCodeInfo);
+    void storeAuthCode(AuthCodeInfo authCodeInfo);
 
     /**
      * 获取验证码
-     * @param authCodeInfo
+     * @param userPhone
      */
-    void getAuthCode(@Param("authCodeInfo")AuthCodeInfo authCodeInfo);
+    Integer getAuthCode(@Param("userPhone")String userPhone);
+
+
 }

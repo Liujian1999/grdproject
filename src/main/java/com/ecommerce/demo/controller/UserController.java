@@ -1,10 +1,12 @@
 package com.ecommerce.demo.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.ecommerce.demo.entity.model.AuthCodeInfo;
 import com.ecommerce.demo.entity.model.ManagerInfo;
 import com.ecommerce.demo.entity.MyException;
 import com.ecommerce.demo.entity.model.UserInfo;
 import com.ecommerce.demo.service.UserService;
+import com.ecommerce.demo.utils.AuthCodeUtils;
 import com.ecommerce.demo.utils.JWTUtils;
 import com.ecommerce.demo.utils.ResponseJson;
 import com.zhenzi.sms.ZhenziSmsClient;
@@ -19,6 +21,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
+/**
+ * @author liujian
+ * @data 2021/03/24
+ */
 @RestController
 @RequestMapping("user")
 @Slf4j
@@ -35,6 +41,7 @@ public class UserController {
      * 榛子云appSecret
      */
     private String appSecret = "f734e8f0-de41-4317-a3a9-f7bfacbdfc4f";
+
     @Autowired
     UserService userService;
 
@@ -52,10 +59,14 @@ public class UserController {
             return ResponseJson.buildFail("用户信息不能为空");
         }
         try {
+            Integer code =new AuthCodeUtils().getAuthCode(userInfo.getUserPhone());
+            if (code == -1){
+                return ResponseJson.buildFail("验证码未生效，请重新发送");
+            }
             flag = userService.findUserByUserName(userInfo.getUserName());
             if (flag == false) {
                 return ResponseJson.buildFail("该用户名已存在");
-            } else if () {
+            } else if (!userInfo.getCode().equals(String.valueOf(code))) {
                 return ResponseJson.buildFail("验证码输入错误");
             }
             flag = userService.registUser(userInfo);
@@ -69,12 +80,13 @@ public class UserController {
 
     /**
      * 用户登录
+     *
      * @param userInfo
      * @return
      */
     @PostMapping("/userLogin")
     public JSONObject userLogin(@RequestBody UserInfo userInfo) {
-        Map<String,String> map = new HashMap<>();
+        Map<String, String> map = new HashMap<>(10);
         /**
          * 以手机验证码登录
          */
@@ -87,11 +99,15 @@ public class UserController {
                 if (flag == false) {
                     return ResponseJson.buildFail("该用户不存在,请先注册！");
                 }
+                Integer code =new AuthCodeUtils().getAuthCode(userInfo.getUserPhone());
+                if (code == -1){
+                    return ResponseJson.buildFail("验证码未生效，请重新发送");
+                }
                 //校验验证码
-                if () {
+                if (userInfo.getCode().equals(String.valueOf(code))) {
                     String token = JWTUtils.generateToken(userInfo);
-                    map.put("token",token);
-                    return ResponseJson.buildSuccess("登录成功！",map);
+                    map.put("token", token);
+                    return ResponseJson.buildSuccess("登录成功！", map);
                 } else {
                     return ResponseJson.buildFail("验证码输入不正确，登录失败");
                 }
@@ -102,8 +118,8 @@ public class UserController {
                 boolean flag = userService.findUserByUserNameAndPwd(userInfo);
                 if (flag == true) {
                     String token = JWTUtils.generateToken(userInfo);
-                    map.put("token",token);
-                    return ResponseJson.buildSuccess("登录成功！",map);
+                    map.put("token", token);
+                    return ResponseJson.buildSuccess("登录成功！", map);
                 }
                 return ResponseJson.buildFail("账号或密码不正确，登录失败");
             }
@@ -116,17 +132,18 @@ public class UserController {
 
     /**
      * 商铺管理员登录
+     *
      * @param managerInfo
      * @return
      */
     //todo 暂时写死，之后修改
     @PostMapping("/shopLogin")
-    public JSONObject ManagerLogin(@RequestBody ManagerInfo managerInfo){
-        Map<String,String>map = new HashMap<>();
-        if(managerInfo.getManagerName().equals("admin")&& managerInfo.getPassword().equals("123456")){
+    public JSONObject ManagerLogin(@RequestBody ManagerInfo managerInfo) {
+        Map<String, String> map = new HashMap<>(10);
+        if ("admin".equals(managerInfo.getManagerName()) && "123456".equals(managerInfo.getPassword())) {
             String token = JWTUtils.generateToken(managerInfo);
-            map.put("token",token);
-            return ResponseJson.buildSuccess("登录成功！",map);
+            map.put("token", token);
+            return ResponseJson.buildSuccess("登录成功！", map);
         }
         return ResponseJson.buildFail("账号或密码不正确，登录失败");
     }
@@ -139,12 +156,14 @@ public class UserController {
      * @return
      */
     @GetMapping(value = "/phone/code")
-    public JSONObject getCode(@RequestParam("phoneNumber") String phoneNumber) {
-        try {
+    public JSONObject getCode(@RequestParam("phoneNumber") String phoneNumber) throws Exception {
+        AuthCodeInfo authCodeInfo = new AuthCodeInfo();
+        authCodeInfo.setSendTime(System.currentTimeMillis());
+        authCodeInfo.setUserPhone(phoneNumber);
             JSONObject json;
             ZhenziSmsClient client = new ZhenziSmsClient(apiUrl, appId, appSecret);
             String code = String.valueOf(new Random().nextInt(899999) + 100000);
-            Map<String, Object> params = new HashMap<String, Object>();
+            Map<String, Object> params = new HashMap<String, Object>(10);
             params.put("number", phoneNumber);
             params.put("templateId", "3423");
             //这个参数就是短信模板上那两个参数
@@ -152,20 +171,18 @@ public class UserController {
             templateParams[0] = code;
             templateParams[1] = "2分钟";
             params.put("templateParams", templateParams);
+            authCodeInfo.setCodeNumber(Integer.parseInt(code));
+            //存储验证码
+             AuthCodeUtils.storeAuthCode(authCodeInfo);
             String result = client.send(params);
             json = JSONObject.parseObject(result);
-            if (json.getInteger("code") != 0)
+            if (json.getInteger("code") != 0) {
                 return ResponseJson.buildFail("短信发送失败,code:" + code);
+            }
             json = new JSONObject();
             json.put("memPhone", phoneNumber);
             json.put("createTime", System.currentTimeMillis());
-            // 将认证码存入数据库
             return ResponseJson.buildSuccess("发送成功", json);
-        } catch (Exception e) {
-            log.info(e.getMessage());
-            return ResponseJson.buildFail("发送失败");
         }
     }
 
-
-}

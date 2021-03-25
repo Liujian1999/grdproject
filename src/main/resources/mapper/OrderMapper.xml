@@ -6,6 +6,6 @@
 <mapper namespace="com.ecommerce.demo.mapper.OrderMapper">
 
  <insert id="orderCreate" parameterType="com.ecommerce.demo.entity.model.OrderInfo" >
-     insert  into order_info(order_number,original_price,sell_price) values(#{orderNumber},#{originalPrice},#{sellPrice})
+     insert  into order_info(order_number,original_price,sell_price,order_name) values(#{orderNumber},#{originalPrice},#{sellPrice},#{orderName})
  </insert>
 </mapper>
