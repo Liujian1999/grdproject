@@ -26,7 +26,7 @@ public class OrderInfo {
     /**
      * 订单成交价
      */
-    private double sellPrice;
+    private float sellPrice;
 
     /**
      * 订单状态

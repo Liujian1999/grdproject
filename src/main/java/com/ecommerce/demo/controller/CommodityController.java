@@ -93,6 +93,4 @@ public class CommodityController {
         map.put("commodities",commodities);
         return ResponseJson.buildSuccess("展示成功！",map);
     }
-
-
 }

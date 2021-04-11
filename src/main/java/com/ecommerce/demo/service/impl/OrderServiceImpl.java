@@ -36,12 +36,12 @@ public class OrderServiceImpl implements OrderService {
 
         String orderNumber = orderInfo.getOrderNumber();
         //付款金额，从前台获取，必填
-        double sellPrice = orderInfo.getSellPrice();
+        float sellPrice =  orderInfo.getSellPrice();
         //订单名称，必填
         String orderName = orderInfo.getOrderName();
-        aliPayRequest.setBizContent("{\"orderNumber\":\"" + orderNumber + "\","
-                + "\"sellPrice\":\"" + sellPrice + "\","
-                + "\"orderName\":\"" + orderName + "\","
+        aliPayRequest.setBizContent("{\"out_trade_no\":\"" + orderNumber + "\","
+                + "\"total_amount\":" + sellPrice + ","
+                + "\"subject\":\"" + orderName + "\","
                 + "\"product_code\":\"FAST_INSTANT_TRADE_PAY\"}");
         //请求
         String result = null;

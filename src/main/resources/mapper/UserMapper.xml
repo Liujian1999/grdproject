@@ -14,7 +14,7 @@
     </select>
 
     <select id="findUserByUserNameAndPwd" parameterType="com.ecommerce.demo.entity.model.UserInfo" resultType="java.lang.Integer">
-        select count(*) from user_info where user_name = #{userName} and password=#{passWord}
+        select count(*) from user_info where user_name = #{userName} and user_password=#{passWord}
     </select>
 
     <select id="findUserByUserPhone" parameterType="com.ecommerce.demo.entity.model.UserInfo" resultType="java.lang.Integer">
