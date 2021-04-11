@@ -5,9 +5,22 @@
 
 <mapper namespace="com.ecommerce.demo.mapper.CommodityMapper">
 
+    <resultMap id="commodity" type="com.ecommerce.demo.entity.model.CommodityInfo">
+        <result column="id" property="id"/>
+        <result column="commission_rate"   property="commissionRate" javaType="double"/>
+        <result column="commodity_describe"   property="commodityDescribe" javaType="String"/>
+        <result column="commodity_img"   property="commodityImg" javaType="String"/>
+        <result column="commodity_name"   property="commodityName" javaType="String"/>
+        <result column="commodity_price"   property="commodityPrice" javaType="BigDecimal"/>
+        <result column="commodity_real_price"   property="commodityRealPrice" javaType="BigDecimal"/>
+        <result column="shelve_time"   property="shelveTime" javaType="long"/>
+        <result column="state"   property="state" javaType="Integer"/>
+        <result column="is_carousel" property="isCarousel" javaType="boolean"/>
+    </resultMap>
+
     <insert id="commodityShelve" parameterType="com.ecommerce.demo.entity.model.CommodityInfo">
-    insert into commodity_info(commodity_describe,commodity_img,commodity_price,commodity_real_price,commission_rate,shelve_time,commodity_name,state)
-    values (#{commodityDescribe},#{commodityImg},#{commodityPrice},#{commodityRealPrice},#{commissionRate},#{shelveTime},#{commodityName},#{state})
+    insert into commodity_info(commodity_describe,commodity_img,commodity_price,commodity_real_price,commission_rate,shelve_time,commodity_name,state,is_carousel)
+    values (#{commodityDescribe},#{commodityImg},#{commodityPrice},#{commodityRealPrice},#{commissionRate},#{shelveTime},#{commodityName},#{state},#{isCarousel})
 </insert>
 
     <delete id="commodityRemove" parameterType="int">
@@ -16,7 +29,12 @@
         where id=#{id}
     </delete>
 
-    <select id="findAllCommoditiesByState" parameterType="integer" resultType="com.ecommerce.demo.entity.model.CommodityInfo">
-    select * from commodity_info where state = #{state}
+    <select id="findCommodityById" parameterType="integer" resultMap="commodity">
+    select * from commodity_info where id = #{id} and state = 1
     </select>
+
+    <select id="findAllCommodities" parameterType="long" resultMap="commodity">
+        select * from commodity_info where shelve_time &lt; #{invalidTime}  and state  = 1
+    </select>
+
 </mapper>

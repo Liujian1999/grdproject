@@ -5,6 +5,16 @@
 
 <mapper namespace="com.ecommerce.demo.mapper.UserMapper">
 
+    <resultMap id="shoppingCartList" type="com.ecommerce.demo.entity.model.ShoppingCartInfo">
+        <result property="id" column="id" javaType="integer"/>
+        <result property="commodityRealPrice" column="commodity_real_price" javaType="BigDecimal"/>
+        <result property="commodityPrice" column="commodity_price" javaType="BigDecimal"/>
+        <result property="amount" column="amount" javaType="integer"/>
+        <result property="commodityId" column="commodity_id" javaType="integer"/>
+        <result property="commodityImg" column="commodity_img" javaType="integer"/>
+        <result property="userId" column="user_id" javaType="integer"/>
+    </resultMap>
+
     <insert id="userRegist" parameterType="com.ecommerce.demo.entity.model.UserInfo">
         insert into user_info(user_name,user_phone,user_password) values (#{userName},#{userPhone},#{passWord})
     </insert>
@@ -26,5 +36,32 @@
     </insert>
     <select id="getAuthCode" resultType="INTEGER" >
         select code_number from auth_code where user_phone = #{userPhone} order by send_time desc limit 1
+    </select>
+
+    <insert id="addShoppingCart" parameterType="com.ecommerce.demo.entity.model.ShoppingCartInfo">
+        insert into shopping_cart(commodity_id,amount,commodity_price,commodity_real_price,user_id)
+        values(#{commodityId},#{amount},#{commodityPrice},#{commodityRealPrice},#{userId})
+    </insert>
+
+    <delete id="delCommodityCart" parameterType="integer">
+        delete
+        from shopping_cart
+        where commodity_id = #{commodityId}
+    </delete>
+
+    <update id="reduceGoodsAmounts" parameterType="integer">
+        update shopping_cart
+        set amount = amount-1
+        where commodity_id = #{commodityId}
+    </update>
+
+    <update id="addAmountsCart" parameterType="integer">
+        update shopping_cart
+        set amount = amount+1
+        where commodity_id = #{commodityId}
+    </update>
+
+    <select id="getShoppingCartList" resultMap="shoppingCartList">
+        select * from shopping_cart where user_id = #{userId}
     </select>
 </mapper>

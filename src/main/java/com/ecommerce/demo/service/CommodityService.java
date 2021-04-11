@@ -1,8 +1,10 @@
 package com.ecommerce.demo.service;
 
 import com.ecommerce.demo.entity.model.CommodityInfo;
+import com.github.pagehelper.PageInfo;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -12,7 +14,7 @@ public interface CommodityService {
      * @param file
      * @return
      */
-    Map<String,String> uploadImg(MultipartFile file);
+    Map<String,String> uploadImg(MultipartFile file) throws IOException;
 
     /**
      * 商品上架
@@ -29,8 +31,16 @@ public interface CommodityService {
 
     /**
      * 展示上架的商品
-     * @param state
+     * @param id
      * @return
      */
-    List<CommodityInfo> findAllCommoditiesByState(Integer state);
+    CommodityInfo findCommodityById(Integer id);
+
+    /**
+     * 商品列表展示
+     * @param pageNumber
+     * @param pageSize
+     * @return
+     */
+    PageInfo<CommodityInfo> findAllCommodities(int pageNumber, int pageSize);
 }

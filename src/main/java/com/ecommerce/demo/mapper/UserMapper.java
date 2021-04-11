@@ -1,9 +1,12 @@
 package com.ecommerce.demo.mapper;
 
 import com.ecommerce.demo.entity.model.AuthCodeInfo;
+import com.ecommerce.demo.entity.model.ShoppingCartInfo;
 import com.ecommerce.demo.entity.model.UserInfo;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public interface UserMapper {
@@ -44,5 +47,41 @@ public interface UserMapper {
      */
     Integer getAuthCode(@Param("userPhone")String userPhone);
 
+    /**
+     * 加入商品到购物车
+     * @param shoppingCartInfo
+     * @return
+     */
+    int addShoppingCart(ShoppingCartInfo shoppingCartInfo);
 
+    /**
+     * 从购物车移除商品
+     * @param commodityId
+     * @return
+     */
+    int delCommodityCart(@Param("commodityId") Integer commodityId);
+
+
+    /**
+     * 减少购物车莫商品数量
+     *
+     * @param commodityId
+     * @return
+     */
+    int reduceGoodsAmounts(@Param("commodityId") Integer commodityId);
+
+    /**
+     * 购物车商品数量增加
+     * @param commodityId
+     * @return
+     */
+    int addAmountsCart(Integer commodityId);
+
+    /**
+     * 商品列表展示
+     * @param pageNumber
+     * @param pageSize
+     * @return
+     */
+    List<ShoppingCartInfo> getShoppingCartList(String userId);
 }

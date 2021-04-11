@@ -45,4 +45,10 @@ public class CommodityInfo {
      */
 
     private Integer state;
+
+    /**
+     * 上架方式
+     */
+
+    private boolean isCarousel;
 }

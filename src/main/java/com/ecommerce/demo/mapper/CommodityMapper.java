@@ -13,7 +13,7 @@ public interface CommodityMapper {
      * @param shelveInfo
      * @return
      */
-    int commodityShelve(@Param("shelveInfo") CommodityInfo shelveInfo);
+    int commodityShelve( CommodityInfo shelveInfo);
 
     /**
      * 商品下架
@@ -22,5 +22,19 @@ public interface CommodityMapper {
      */
     int commodityRemove(@Param("id") Integer id);
 
-    List<CommodityInfo> findAllCommoditiesByState(Integer state);
+    /**
+     * 查询商品详情
+     * @param id
+     * @return
+     */
+
+    CommodityInfo findCommodityById(@Param("id") Integer id);
+
+    /**
+     * 查看商品列表
+     * @param timeStamp
+     * @return
+     */
+
+    List<CommodityInfo> findAllCommodities(@Param("invalidTime") long timeStamp);
 }

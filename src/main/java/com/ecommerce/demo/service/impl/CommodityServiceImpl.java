@@ -4,6 +4,9 @@ import com.ecommerce.demo.entity.MyException;
 import com.ecommerce.demo.entity.model.CommodityInfo;
 import com.ecommerce.demo.mapper.CommodityMapper;
 import com.ecommerce.demo.service.CommodityService;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,10 +33,10 @@ public class CommodityServiceImpl implements CommodityService {
      * @return
      */
     @Override
-    public Map<String, String> uploadImg(MultipartFile file) {
+    public Map<String, String> uploadImg(MultipartFile file) throws IOException {
         Map<String, String> map = new HashMap<>();
         //设置上传路径
-        String filePath = File.separator + "usr" + File.separator + "local" + File.separator + "img";
+        String filePath = File.separator + "usr" + File.separator + "local" + File.separator + "www"+File.separator + "img";
         //获取上传文件名
         String fileName = file.getOriginalFilename();
         //设置新的文件名，防止重复
@@ -45,11 +48,7 @@ public class CommodityServiceImpl implements CommodityService {
         //获得文件总路径
         String realPath = filePath + File.separator + fileName;
         File dir = new File(realPath);
-        try {
             file.transferTo(dir);
-        } catch (IOException e) {
-            throw new MyException("文件传输发生异常", "000");
-        }
         map.put("fileName", fileName);
         map.put("url", realPath);
         return map;
@@ -85,11 +84,25 @@ public class CommodityServiceImpl implements CommodityService {
 
     /**
      * 展示上架的商品
-     * @param state
+     * @param id
      * @return
      */
     @Override
-    public List<CommodityInfo> findAllCommoditiesByState(Integer state) {
-        return commodityMapper.findAllCommoditiesByState(state);
+    public CommodityInfo findCommodityById(Integer id) {
+        return commodityMapper.findCommodityById(id);
+    }
+
+    /**
+     * 商品列表展示
+     * @param pageNumber
+     * @param pageSize
+     * @return
+     */
+    @Override
+    public PageInfo<CommodityInfo> findAllCommodities(int pageNumber, int pageSize) {
+        PageHelper.startPage(pageNumber,pageSize);
+        long timeStamp = System.currentTimeMillis();
+        List<CommodityInfo> commodityInfos = commodityMapper.findAllCommodities(timeStamp);
+        return new PageInfo<>(commodityInfos);
     }
 }
