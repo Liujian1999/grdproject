@@ -20,10 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Random;
+import java.util.*;
 
 /**
  * @author liujian
@@ -90,7 +87,7 @@ public class UserController {
      */
     @PostMapping("/userLogin")
     public JSONObject userLogin(@RequestBody UserInfo userInfo) {
-        Map<String, String> map = new HashMap<>(10);
+        Map<String, Object> map = new HashMap<>(10);
         /**
          * 以手机验证码登录
          */
@@ -99,8 +96,8 @@ public class UserController {
                 /**
                  * 查找该用户是否存在
                  */
-                boolean flag = userService.findUserByPhone(userInfo.getUserPhone());
-                if (flag == false) {
+                UserInfo user = userService.findUserByPhone(userInfo.getUserPhone());
+                if (user == null) {
                     return ResponseJson.buildFail("该用户不存在,请先注册！");
                 }
                 Integer code = new AuthCodeUtils().getAuthCode(userInfo.getUserPhone());
@@ -111,6 +108,7 @@ public class UserController {
                 if (userInfo.getCode().equals(String.valueOf(code))) {
                     String token = JWTUtils.generateToken(userInfo);
                     map.put("token", token);
+                    map.put("user" , user);
                     return ResponseJson.buildSuccess("登录成功！", map);
                 } else {
                     return ResponseJson.buildFail("验证码输入不正确，登录失败");
@@ -119,10 +117,11 @@ public class UserController {
                 /**
                  * 以账号密码登录
                  */
-                boolean flag = userService.findUserByUserNameAndPwd(userInfo);
-                if (flag == true) {
+                UserInfo user = userService.findUserByUserNameAndPwd(userInfo);
+                if (user != null) {
                     String token = JWTUtils.generateToken(userInfo);
                     map.put("token", token);
+                    map.put("user" , user);
                     return ResponseJson.buildSuccess("登录成功！", map);
                 }
                 return ResponseJson.buildFail("账号或密码不正确，登录失败");
@@ -208,8 +207,8 @@ public class UserController {
     /**
      * 从购物车移除商品
      */
-    @GetMapping("delInCart/{commodityId}")
-    public JSONObject delCommodityInCart(@PathVariable("commodityId") Integer commodityId) {
+    @PostMapping("delInCart")
+    public JSONObject delCommodityInCart(@RequestBody List<Integer>commodityId) {
         if (commodityId == null) {
             return ResponseJson.buildFail("商品id不能为空");
         }
@@ -247,16 +246,16 @@ public class UserController {
         }
         boolean flag = userService.addAmountCart(commodityId);
         if (flag) {
-            return ResponseJson.buildSuccess("减少数量成功！");
+            return ResponseJson.buildSuccess("增加数量成功！");
         } else {
-            return ResponseJson.buildFail("减少数量失败！");
+            return ResponseJson.buildFail("增加数量失败！");
         }
     }
 
     /**
      * 购物车列表
      */
-    @PostMapping("addAmountCart")
+    @PostMapping("shoppingCartList")
     public JSONObject shoppingCartList(@RequestBody Map<String,String> hashmap) {
         if (hashmap.isEmpty()) {
             return ResponseJson.buildFail("商品id不能为空");

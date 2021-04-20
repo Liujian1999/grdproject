@@ -40,4 +40,14 @@ public class ShoppingCartInfo {
      * 商品图片
      */
     private String commodityImg;
+
+    /**
+     *商品描述
+     */
+    private String commodityDescribe;
+
+    /**
+     * 商品名称
+     */
+    private String commodityName;
 }

@@ -6,13 +6,21 @@
 <mapper namespace="com.ecommerce.demo.mapper.UserMapper">
 
     <resultMap id="shoppingCartList" type="com.ecommerce.demo.entity.model.ShoppingCartInfo">
-        <result property="id" column="id" javaType="integer"/>
+        <result property="id" column="id" javaType="Integer"/>
         <result property="commodityRealPrice" column="commodity_real_price" javaType="BigDecimal"/>
         <result property="commodityPrice" column="commodity_price" javaType="BigDecimal"/>
-        <result property="amount" column="amount" javaType="integer"/>
-        <result property="commodityId" column="commodity_id" javaType="integer"/>
-        <result property="commodityImg" column="commodity_img" javaType="integer"/>
-        <result property="userId" column="user_id" javaType="integer"/>
+        <result property="amount" column="amount" javaType="Integer"/>
+        <result property="commodityId" column="commodity_id" javaType="Integer"/>
+        <result property="commodityImg" column="commodity_img" javaType="String"/>
+        <result property="userId" column="user_id" javaType="Integer"/>
+        <result property="commodityDescribe" column="commodity_describe" javaType="String"/>
+        <result property="commodityName" column="commodity_name" javaType="String"/>
+    </resultMap>
+
+    <resultMap id="userInfo" type="com.ecommerce.demo.entity.model.UserInfo">
+        <result property="id" column="id" javaType="Integer"/>
+        <result property="userName" column="user_name" javaType="String"/>
+        <result property="userPhone" column="user_phone" javaType="String"/>
     </resultMap>
 
     <insert id="userRegist" parameterType="com.ecommerce.demo.entity.model.UserInfo">
@@ -23,12 +31,12 @@
         select count(*) from user_info where user_name = #{userName}
     </select>
 
-    <select id="findUserByUserNameAndPwd" parameterType="com.ecommerce.demo.entity.model.UserInfo" resultType="java.lang.Integer">
-        select count(*) from user_info where user_name = #{userName} and user_password=#{passWord}
+    <select id="findUserByUserNameAndPwd" parameterType="com.ecommerce.demo.entity.model.UserInfo" resultMap="userInfo">
+        select * from user_info where user_name = #{userName} and user_password=#{passWord}
     </select>
 
-    <select id="findUserByUserPhone" parameterType="com.ecommerce.demo.entity.model.UserInfo" resultType="java.lang.Integer">
-        select count(*) from user_info where user_phone=#{userPhone}
+    <select id="findUserByUserPhone" parameterType="com.ecommerce.demo.entity.model.UserInfo"  resultMap="userInfo">
+        select * from user_info where user_phone=#{userPhone}
     </select>
 
     <insert id="storeAuthCode" parameterType="com.ecommerce.demo.entity.model.AuthCodeInfo">
@@ -39,14 +47,17 @@
     </select>
 
     <insert id="addShoppingCart" parameterType="com.ecommerce.demo.entity.model.ShoppingCartInfo">
-        insert into shopping_cart(commodity_id,amount,commodity_price,commodity_real_price,user_id)
-        values(#{commodityId},#{amount},#{commodityPrice},#{commodityRealPrice},#{userId})
+        insert into shopping_cart(commodity_describe,commodity_id,amount,commodity_price,commodity_real_price,user_id,commodity_img,commodity_name)
+        values(#{commodityDescribe},#{commodityId},#{amount},#{commodityPrice},#{commodityRealPrice},#{userId},#{commodityImg},#{commodityName})
     </insert>
 
     <delete id="delCommodityCart" parameterType="integer">
         delete
         from shopping_cart
-        where commodity_id = #{commodityId}
+        where commodity_id IN
+<foreach collection="commodityId" separator="," item="item"  open="(" close=")">
+    #{item}
+</foreach>
     </delete>
 
     <update id="reduceGoodsAmounts" parameterType="integer">

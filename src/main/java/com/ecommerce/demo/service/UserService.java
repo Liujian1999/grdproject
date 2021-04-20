@@ -7,6 +7,7 @@ import com.ecommerce.demo.entity.model.UserInfo;
 import com.github.pagehelper.PageInfo;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -33,14 +34,14 @@ public interface UserService {
      * @param user
      * @return
      */
-    boolean findUserByUserNameAndPwd(UserInfo user);
+    UserInfo findUserByUserNameAndPwd(UserInfo user);
 
     /**
      * 通过手机号查找用户
      * @param userPhone
      * @return
      */
-    boolean findUserByPhone(String userPhone);
+    UserInfo findUserByPhone(String userPhone);
 
     /**
      * 获得手机验证码
@@ -67,7 +68,7 @@ public interface UserService {
      * @param commodityId
      * @return
      */
-    boolean delCommodityInCart(Integer commodityId);
+    boolean delCommodityInCart(List<Integer> commodityId);
 
     /**
      * 减少购物车莫商品数量

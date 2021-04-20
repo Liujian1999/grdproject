@@ -32,4 +32,9 @@ public class OrderInfo {
      * 订单状态
      */
     private Integer orderState;
+
+    /**
+     * 订单创建时间
+     */
+    private long createTime;
 }

@@ -8,6 +8,7 @@ import com.ecommerce.demo.service.UserService;
 import com.ecommerce.demo.utils.MD5Utils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -62,13 +63,10 @@ public class UserServiceImpl implements UserService {
      * @return
      */
     @Override
-    public boolean findUserByUserNameAndPwd(UserInfo userInfo) {
+    public UserInfo findUserByUserNameAndPwd(UserInfo userInfo) {
         userInfo.setPassWord(MD5Utils.MD5(userInfo.getPassWord()));
-        int row = userMapper.findUserByUserNameAndPwd(userInfo);
-        if (row == 1) {
-            return true;
-        }
-        return false;
+        UserInfo user = userMapper.findUserByUserNameAndPwd(userInfo);
+        return  user;
     }
 
     /**
@@ -78,12 +76,9 @@ public class UserServiceImpl implements UserService {
      * @return
      */
     @Override
-    public boolean findUserByPhone(String userPhone) {
-        int row = userMapper.findUserByUserPhone(userPhone);
-        if (row == 1) {
-            return true;
-        }
-        return false;
+    public UserInfo findUserByPhone(String userPhone) {
+        UserInfo user = userMapper.findUserByUserPhone(userPhone);
+        return  user;
     }
 
     /**
@@ -132,7 +127,7 @@ public class UserServiceImpl implements UserService {
      * @return
      */
     @Override
-    public boolean delCommodityInCart(Integer commodityId) {
+    public boolean delCommodityInCart(List<Integer> commodityId) {
         int row = userMapper.delCommodityCart(commodityId);
         if (row > 0) {
             return true;

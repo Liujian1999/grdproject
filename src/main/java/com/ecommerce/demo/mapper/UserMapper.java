@@ -27,13 +27,13 @@ public interface UserMapper {
      * @param userInfo
      * @return
      */
-    int findUserByUserNameAndPwd( UserInfo userInfo);
+    UserInfo findUserByUserNameAndPwd( UserInfo userInfo);
     /**
      * 通过手机号查找用户
      * @param userPhone
      * @return
      */
-    int findUserByUserPhone(@Param("userPhone") String userPhone);
+    UserInfo findUserByUserPhone(@Param("userPhone") String userPhone);
 
     /**
      * 储存验证码
@@ -59,7 +59,7 @@ public interface UserMapper {
      * @param commodityId
      * @return
      */
-    int delCommodityCart(@Param("commodityId") Integer commodityId);
+    int delCommodityCart(List<Integer> commodityId);
 
 
     /**

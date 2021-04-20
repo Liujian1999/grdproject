@@ -4,8 +4,53 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.ecommerce.demo.mapper.OrderMapper">
+    <resultMap id="commodity" type="com.ecommerce.demo.entity.model.CommodityInfo">
+        <result column="id" property="id"/>
+        <result column="commission_rate"   property="commissionRate" javaType="double"/>
+        <result column="commodity_describe"   property="commodityDescribe" javaType="String"/>
+        <result column="commodity_img"   property="commodityImg" javaType="String"/>
+        <result column="commodity_name"   property="commodityName" javaType="String"/>
+        <result column="commodity_price"   property="commodityPrice" javaType="BigDecimal"/>
+        <result column="commodity_real_price"   property="commodityRealPrice" javaType="BigDecimal"/>
+        <result column="shelve_time"   property="shelveTime" javaType="long"/>
+        <result column="state"   property="state" javaType="Integer"/>
+        <result column="is_carousel" property="isCarousel" javaType="boolean"/>
+    </resultMap>
+
+    <resultMap id="orderInfo" type="com.ecommerce.demo.entity.model.OrderInfo">
+        <result property="id" column="id" javaType="Integer"/>
+        <result property="orderName" column="order_name" javaType="String"/>
+        <result property="sellPrice" column="sell_price" javaType="BigDecimal"/>
+        <result property="originalPrice" column="original_price" javaType="BigDecimal"/>
+        <result property="orderNumber" column="order_number" javaType="String"/>
+        <result property="orderState" column="order_state" javaType="Integer"/>
+        <result property="createTime" column="create_time" javaType="long"/>
+    </resultMap>
 
  <insert id="orderCreate" parameterType="com.ecommerce.demo.entity.model.OrderInfo" >
-     insert  into order_info(order_number,original_price,sell_price,order_name) values(#{orderNumber},#{originalPrice},#{sellPrice},#{orderName})
+     insert  into order_info(order_number,original_price,sell_price,order_name,create_time) values(#{orderNumber},#{originalPrice},#{sellPrice},#{orderName},#{createTime})
  </insert>
+
+    <select id="getPayList" resultMap="commodity">
+        select * from commodity_info where id IN
+<foreach collection="commodityIdList" open="(" close=")" item="item" separator=",">
+    #{item}
+</foreach>
+    </select>
+
+    <select id="findOrderList" resultMap="orderInfo">
+        select * from order_info
+    </select>
+
+    <update id="setOrderState" >
+        update order_info
+        set order_state = 1
+        where order_number = #{orderNumber}
+    </update>
+
+    <update id="setClosedOrderState">
+        update order_info
+        set order_state = 2
+        where create_time &lt; #{validTime} and order_state = 0
+    </update>
 </mapper>

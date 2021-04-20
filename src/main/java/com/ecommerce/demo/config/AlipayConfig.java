@@ -10,10 +10,10 @@ public class AlipayConfig {
     public static String alipay_public_key = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAr1PKFNrK3O18JZQuZvt9Kkm9YwGbKcIbhQPlaQM1pZPt2rnjkCDEjAQ1AvkLgzQiNcvpc01LbQS3qTDOZqdOEDcEZjMYBS/x5x9mljiHjz50hr5iE9qWsLRfotw9RsOMiI83V7AHhwKG1ICfejy+jyHduzo9xOQUCs6J0TX1FY8hQbn5j+Lz6OufRXfCmCTRIyQb5s1A5uZnBtoMMjHCQlmsaaBI2+MIeOCAOd8B3HF+K498dTtoF8/E0gMLxodhAGYxiQ0TLD+aPAbEcHSJRmSxPUBFdh6AZDJVBOWcBRl/UO9E5qsuNZfdDLGPcdn39risBpwehPvQBbMBZm5DxwIDAQAB";
 
     // 服务器异步通知页面路径  需http://格式的完整路径，不能加?id=123这类自定义参数，必须外网可以正常访问
-    public static String notify_url = "http://www.baidu.com";
+    public static String notify_url = "http://39.103.70.117:8081/order/payNotify";
 
     // 页面跳转同步通知页面路径 需http://格式的完整路径，不能加?id=123这类自定义参数，必须外网可以正常访问
-    public static String return_url = "http://www.baidu.com";
+    public static String return_url = "http://39.103.70.117:8081/order/payReturn";
 
     // 签名方式
     public static String sign_type = "RSA2";

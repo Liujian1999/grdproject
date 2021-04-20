@@ -6,20 +6,26 @@ import com.alipay.api.DefaultAlipayClient;
 import com.alipay.api.request.AlipayTradePagePayRequest;
 import com.ecommerce.demo.config.AlipayConfig;
 import com.ecommerce.demo.entity.MyException;
+import com.ecommerce.demo.entity.model.CommodityInfo;
 import com.ecommerce.demo.entity.model.OrderInfo;
 import com.ecommerce.demo.mapper.OrderMapper;
 import com.ecommerce.demo.service.OrderService;
 import com.ecommerce.demo.utils.OrderUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.quartz.JobExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.quartz.QuartzJobBean;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+
 /**
  * @author 刘剑
  * @data 2021/03/24
  */
 @Slf4j
 @Service
-public class OrderServiceImpl implements OrderService {
+public class OrderServiceImpl extends QuartzJobBean implements OrderService {
     @Autowired
     OrderMapper orderMapper;
 
@@ -29,8 +35,8 @@ public class OrderServiceImpl implements OrderService {
         AlipayClient alipayClient = new DefaultAlipayClient(AlipayConfig.gatewayUrl, AlipayConfig.app_id, AlipayConfig.merchant_private_key, "json", AlipayConfig.charset, AlipayConfig.alipay_public_key, AlipayConfig.sign_type);
         //设置请求参数
         AlipayTradePagePayRequest aliPayRequest = new AlipayTradePagePayRequest();
-       // aliPayRequest.setReturnUrl(AlipayConfig.return_url);
-        //aliPayRequest.setNotifyUrl(AlipayConfig.notify_url);
+        aliPayRequest.setReturnUrl(AlipayConfig.return_url);
+        aliPayRequest.setNotifyUrl(AlipayConfig.notify_url);
 
         //商户订单号，后台可以写一个工具类生成一个订单号，必填
 
@@ -61,11 +67,51 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void createOrder(OrderInfo orderInfo) throws Exception {
           orderInfo.setOrderNumber(OrderUtils.generateOrderNumber());
+          orderInfo.setCreateTime(System.currentTimeMillis());
           try {
               orderMapper.orderCreate(orderInfo);
 
           }catch (Exception e){
               throw new Exception(e);
           }
+    }
+
+    /**
+     * 获得结算清单
+     * @param commodityIdList
+     * @return
+     */
+    @Override
+    public List<CommodityInfo> getPayList(List<Integer> commodityIdList) {
+        return orderMapper.getPayList(commodityIdList);
+    }
+
+    /**
+     * 获取订单列表
+     * @return
+     */
+    @Override
+    public List<OrderInfo> findOrderList() {
+        return orderMapper.findOrderList();
+    }
+
+    /**
+     * 设置订单状态
+     */
+    @Override
+    public void setOrderState(String orderNumber) {
+        orderMapper.setOrderState(orderNumber);
+    }
+
+    /**
+     * 执行定时任务，关闭订单
+     * @param jobExecutionContext
+     * @throws JobExecutionException
+     */
+    @Override
+    protected void executeInternal(org.quartz.JobExecutionContext jobExecutionContext) throws JobExecutionException {
+        //设置订单的有效期
+       long validTime = System.currentTimeMillis() - 1000*60*10;
+       orderMapper.setClosedOrderState(validTime);
     }
 }
