@@ -27,7 +27,7 @@ public interface UserService {
      * @param userName
      * @return
      */
-    boolean findUserByUserName(String userName);
+    boolean findUserByUserName(String userName,String userPhone);
 
     /**
      * 校验账号是否正确
@@ -90,4 +90,6 @@ public interface UserService {
      * @return
      */
     PageInfo<ShoppingCartInfo> findShoppingCartList(Map<String, String> hashmap);
+
+    boolean userUpdate(UserInfo userInfo);
 }

@@ -1,8 +1,12 @@
 package com.ecommerce.demo.entity.model;
 
+import com.alibaba.fastjson.JSONArray;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
+
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class OrderInfo {
     /**
      * 订单名称
@@ -37,4 +41,14 @@ public class OrderInfo {
      * 订单创建时间
      */
     private long createTime;
+
+    /**
+     * 商品列表
+     */
+    private JSONArray commodityInfoList;
+
+    /**
+     * 订单商品信息
+     */
+    private String commodityPropertyJson;
 }

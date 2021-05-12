@@ -3,6 +3,7 @@ package com.ecommerce.demo.entity.model;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Data
 public class CommodityInfo {
@@ -51,4 +52,5 @@ public class CommodityInfo {
      */
 
     private boolean isCarousel;
+
 }

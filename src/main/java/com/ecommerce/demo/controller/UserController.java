@@ -64,7 +64,7 @@ public class UserController {
             if (code == -1) {
                 return ResponseJson.buildFail("验证码未生效，请重新发送");
             }
-            flag = userService.findUserByUserName(userInfo.getUserName());
+            flag = userService.findUserByUserName(userInfo.getUserName(),userInfo.getUserPhone());
             if (flag == false) {
                 return ResponseJson.buildFail("该用户已存在");
             } else if (!userInfo.getCode().equals(String.valueOf(code))) {
@@ -262,6 +262,22 @@ public class UserController {
         }
         PageInfo<ShoppingCartInfo>pageInfo = userService.findShoppingCartList(hashmap);
         return ResponseJson.buildSuccess("展示成功",pageInfo);
+    }
+
+    /**
+     * 修改用户密码
+     */
+    @PostMapping("/update")
+    public JSONObject userUpdate(@RequestBody UserInfo userInfo){
+        Integer code = new AuthCodeUtils().getAuthCode(userInfo.getUserPhone());
+        if (code == -1) {
+            return ResponseJson.buildFail("验证码未生效，请重新发送");
+        }
+        boolean flag = userService.userUpdate(userInfo);
+        if (flag){
+            return ResponseJson.buildSuccess("修改成功！");
+        }
+        return ResponseJson.buildFail("修改失败！");
     }
 }
 

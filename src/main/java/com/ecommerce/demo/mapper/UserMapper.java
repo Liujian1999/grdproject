@@ -21,7 +21,7 @@ public interface UserMapper {
      * @param userName
      * @return
      */
-    int findUserByUserName(@Param("userName")String userName);
+    int findUserByUserName(@Param("userName")String userName, @Param("userPhone") String userPhone);
     /**
      * 通过用户名和密码查找用户
      * @param userInfo
@@ -79,9 +79,15 @@ public interface UserMapper {
 
     /**
      * 商品列表展示
-     * @param pageNumber
-     * @param pageSize
+     * @param userId
      * @return
      */
     List<ShoppingCartInfo> getShoppingCartList(String userId);
+
+    /**
+     * 修改用户密码
+     * @param userInfo
+     * @return
+     */
+    int userUpdateById(UserInfo userInfo);
 }

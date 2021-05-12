@@ -65,15 +65,11 @@ public class OrderServiceImpl extends QuartzJobBean implements OrderService {
      * @throws Exception
      */
     @Override
-    public void createOrder(OrderInfo orderInfo) throws Exception {
+    public OrderInfo createOrder(OrderInfo orderInfo) throws Exception {
           orderInfo.setOrderNumber(OrderUtils.generateOrderNumber());
-          orderInfo.setCreateTime(System.currentTimeMillis());
-          try {
-              orderMapper.orderCreate(orderInfo);
-
-          }catch (Exception e){
-              throw new Exception(e);
-          }
+          orderInfo.setCreateTime(System.currentTimeMillis()/1000);
+          orderMapper.orderCreate(orderInfo);
+          return  orderInfo;
     }
 
     /**

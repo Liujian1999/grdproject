@@ -8,13 +8,16 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
+import java.util.Random;
 
 public class OrderUtils {
 
     public static String generateOrderNumber() {
-       String uuid  = UUID.randomUUID().toString();
-       return  uuid;
+        Random random = new Random();
+        String num = String.valueOf(random.nextInt(10000));
+        num += System.currentTimeMillis();
+        num +=String.valueOf(random.nextInt(10000));
+        return num;
     }
 
     /**

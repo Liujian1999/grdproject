@@ -20,15 +20,16 @@
     <resultMap id="orderInfo" type="com.ecommerce.demo.entity.model.OrderInfo">
         <result property="id" column="id" javaType="Integer"/>
         <result property="orderName" column="order_name" javaType="String"/>
-        <result property="sellPrice" column="sell_price" javaType="BigDecimal"/>
-        <result property="originalPrice" column="original_price" javaType="BigDecimal"/>
+        <result property="sellPrice" column="sell_price" javaType="Float"/>
+        <result property="originalPrice" column="original_price" javaType="Double"/>
         <result property="orderNumber" column="order_number" javaType="String"/>
         <result property="orderState" column="order_state" javaType="Integer"/>
         <result property="createTime" column="create_time" javaType="long"/>
+        <result property="commodityPropertyJson" column="commodity_property_json" javaType="String"/>
     </resultMap>
 
  <insert id="orderCreate" parameterType="com.ecommerce.demo.entity.model.OrderInfo" >
-     insert  into order_info(order_number,original_price,sell_price,order_name,create_time) values(#{orderNumber},#{originalPrice},#{sellPrice},#{orderName},#{createTime})
+     insert  into order_info(order_number,original_price,sell_price,order_name,create_time,commodity_property_json) values(#{orderNumber},#{originalPrice},#{sellPrice},#{orderName},#{createTime},#{commodityPropertyJson})
  </insert>
 
     <select id="getPayList" resultMap="commodity">

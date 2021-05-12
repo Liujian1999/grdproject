@@ -1,5 +1,6 @@
 package com.ecommerce.demo.controller;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alipay.api.AlipayApiException;
 
@@ -17,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Type;
 import java.util.*;
 
 @Slf4j
@@ -31,9 +33,13 @@ public class OrderController{
         if (Objects.isNull(orderInfo)) {
             return ResponseJson.buildFail("参数不能为空");
         }
-        orderService.createOrder(orderInfo);
-        return ResponseJson.buildSuccess("成功！");
+        orderInfo.setCommodityPropertyJson(JSONObject.toJSONString(orderInfo.getCommodityInfoList()));
+        OrderInfo orderinfo = orderService.createOrder(orderInfo);
+        //为了让前台显示更加精炼，不显示
+        orderinfo.setCommodityPropertyJson(null);
+        return ResponseJson.buildSuccess("成功！",orderinfo);
     }
+
 
     @PostMapping("/pay")
     public JSONObject payMent(@RequestBody OrderInfo orderInfo) {
@@ -55,6 +61,10 @@ public class OrderController{
     @GetMapping("orderList")
     public JSONObject orderList() {
         List<OrderInfo> orderInfoList = orderService.findOrderList();
+        for (OrderInfo orderInfo : orderInfoList) {
+         orderInfo.setCommodityInfoList(JSONArray.parseArray(orderInfo.getCommodityPropertyJson()));
+         orderInfo.setCommodityPropertyJson(null);
+        }
         return ResponseJson.buildSuccess("true", orderInfoList);
     }
 
@@ -67,27 +77,28 @@ public class OrderController{
      */
     @RequestMapping(value = "/payNotify", method = RequestMethod.POST)
     public void notifyUrl(HttpServletResponse response, HttpServletRequest request) throws IOException, AlipayApiException {
-        PrintWriter out = response.getWriter();
-        boolean signVerified = OrderUtils.vetifyForm(request);
-        if (!signVerified) {
-            System.out.println("验签失败");
-            out.print("fail");
-            return;
+        try(PrintWriter out = response.getWriter()) {
+            boolean signVerified = OrderUtils.vetifyForm(request);
+            if (!signVerified) {
+                System.out.println("验签失败");
+                out.print("fail");
+                return;
+            }
+            //交易状态
+            String trade_status = new String(request.getParameter("trade_status").getBytes("ISO-8859-1"), "UTF-8");
+            String out_trade_no = new String(request.getParameter("out_trade_no").getBytes("ISO-8859-1"), "UTF-8");
+            if (trade_status.equals("TRADE_FINISHED")) {
+                //todo 退款
+                //判断该笔订单是否在商户网站中已经做过处理
+                //如果没有做过处理，根据订单号（out_trade_no）在商户网站的订单系统中查到该笔订单的详细，并执行商户的业务程序
+                //如果有做过处理，不执行商户的业务程序
+                // 注意：
+                //退款日期超过可退款期限后（如三个月可退款），支付宝系统发送该交易状态通知
+            } else if (trade_status.equals("TRADE_SUCCESS")) {
+                orderService.setOrderState(out_trade_no);
+            }
+            out.print("success");
         }
-        //交易状态
-        String trade_status = new String(request.getParameter("trade_status").getBytes("ISO-8859-1"), "UTF-8");
-        String out_trade_no = new String(request.getParameter("out_trade_no").getBytes("ISO-8859-1"), "UTF-8");
-        if (trade_status.equals("TRADE_FINISHED")) {
-            //todo 退款
-            //判断该笔订单是否在商户网站中已经做过处理
-            //如果没有做过处理，根据订单号（out_trade_no）在商户网站的订单系统中查到该笔订单的详细，并执行商户的业务程序
-            //如果有做过处理，不执行商户的业务程序
-            // 注意：
-            //退款日期超过可退款期限后（如三个月可退款），支付宝系统发送该交易状态通知
-        } else if (trade_status.equals("TRADE_SUCCESS")) {
-          orderService.setOrderState(out_trade_no);
-        }
-        out.print("success");
     }
 
     /**

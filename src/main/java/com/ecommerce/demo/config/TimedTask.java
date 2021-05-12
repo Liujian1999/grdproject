@@ -4,7 +4,6 @@ import com.ecommerce.demo.service.impl.OrderServiceImpl;
 import org.quartz.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.quartz.*;
 
 /**
  * JobDetail 的配置有两种方式：MethodInvokingJobDetailFactoryBean 和 JobDetailFactoryBean 。

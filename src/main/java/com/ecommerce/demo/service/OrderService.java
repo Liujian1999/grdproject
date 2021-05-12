@@ -9,7 +9,7 @@ public interface OrderService {
 
     String aliPay(OrderInfo orderInfo);
 
-    void createOrder(OrderInfo orderInfo) throws Exception;
+    OrderInfo createOrder(OrderInfo orderInfo) throws Exception;
 
     List<CommodityInfo> getPayList(List<Integer> commodityIdList);
 

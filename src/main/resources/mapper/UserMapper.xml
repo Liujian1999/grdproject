@@ -28,7 +28,7 @@
     </insert>
 
     <select id="findUserByUserName" parameterType="string" resultType="java.lang.Integer">
-        select count(*) from user_info where user_name = #{userName}
+        select count(*) from user_info where user_name = #{userName} or user_phone = #{userPhone}
     </select>
 
     <select id="findUserByUserNameAndPwd" parameterType="com.ecommerce.demo.entity.model.UserInfo" resultMap="userInfo">
@@ -75,4 +75,10 @@
     <select id="getShoppingCartList" resultMap="shoppingCartList">
         select * from shopping_cart where user_id = #{userId}
     </select>
+
+    <update id="userUpdateById" parameterType="com.ecommerce.demo.entity.model.UserInfo">
+        update user_info
+        set user_password = #{passWord}
+        where id = #{id}
+    </update>
 </mapper>

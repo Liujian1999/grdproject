@@ -48,8 +48,8 @@ public class UserServiceImpl implements UserService {
      * @return
      */
     @Override
-    public boolean findUserByUserName(String userName) {
-        int row = userMapper.findUserByUserName(userName);
+    public boolean findUserByUserName(String userName,String userPhone) {
+        int row = userMapper.findUserByUserName(userName,userPhone);
         if (row == 0) {
             return true;
         }
@@ -177,5 +177,20 @@ public class UserServiceImpl implements UserService {
         PageHelper.startPage(pageNumber,pageSize);
         List<ShoppingCartInfo> list = userMapper.getShoppingCartList(userId);
         return new PageInfo<>(list);
+    }
+
+    /**
+     * 修改用户密码
+     * @param userInfo
+     * @return
+     */
+    @Override
+    public boolean userUpdate(UserInfo userInfo) {
+        userInfo.setPassWord(MD5Utils.MD5(userInfo.getPassWord()));
+        int row = userMapper.userUpdateById(userInfo);
+        if (row > 0){
+            return true;
+        }
+        return false;
     }
 }

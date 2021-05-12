@@ -1,13 +1,12 @@
 package com.ecommerce.demo.interceptor;
 
 import com.auth0.jwt.interfaces.Claim;
+import com.ecommerce.demo.entity.MyException;
 import com.ecommerce.demo.utils.JWTUtils;
-import com.ecommerce.demo.utils.ResponseJson;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.HandlerInterceptor;
-
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
@@ -22,11 +21,10 @@ public class LoginInterceptor implements HandlerInterceptor {
      * @return
      * @throws Exception
      */
+
     @Override
+    @Transactional
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        ObjectMapper objectMapper = new ObjectMapper();
-        response.setContentType("application/json ; charset=utf-8");
-        PrintWriter writer = response.getWriter();
         String token = request.getHeader("token");
         if (StringUtils.isNotBlank(token)){
             Map<String,Claim>claims = JWTUtils.checkJWT(token);
@@ -35,11 +33,9 @@ public class LoginInterceptor implements HandlerInterceptor {
                 request.setAttribute("userName", claims.get("userName"));
             }
             return true ;
+        }else {
+            throw new MyException("未登录，请重新登录","1000");
         }
-        writer.print(objectMapper.writeValueAsString(ResponseJson.buildFail("未登录,请先登录")));
-        writer.flush();
-        writer.close();
-        return false;
     }
 
 }
